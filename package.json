@@ -1,37 +1,57 @@
 {
   "name": "parse-server-example",
-  "version": "1.4.0",
-  "description": "An example Parse API server using the parse-server module",
+  "version": "3.1.4",
+  "description": "An example implementation of Parse Server",
   "repository": {
     "type": "git",
-    "url": "https://github.com/ParsePlatform/parse-server-example"
+    "url": "https://github.com/parse-community/parse-server-example"
   },
-  "license": "MIT",
-  "main": "index.js",
+  "license": "Apache-2.0",
+  "main": "dist/index.js",
   "scripts": {
-    "coverage": "nyc jasmine",
-    "lint": "eslint --cache ./cloud && eslint --cache index.js && eslint --cache ./spec",
-    "lint-fix": "eslint --cache --fix ./cloud && eslint --cache --fix index.js && eslint --cache --fix ./spec",
-    "prettier": "prettier --write '{cloud,spec}/{**/*,*}.js' 'index.js'",
-    "start": "node index.js",
-    "test": "mongodb-runner start && jasmine",
-    "watch": "nodemon index.js"
+    "coverage": "nyc --reporter=html --reporter=text npm test",
+    "lint": "eslint --cache .",
+    "lint-fix": "eslint --cache --fix .",
+    "prettier": "prettier --write '{cloud,spec}/{**/*,*}.{ts,js,mjs,cjs}' index.ts",
+    "start": "node dist/index.js",
+    "pretest": "cross-env MONGODB_VERSION=${MONGODB_VERSION:=7.0.1} MONGODB_TOPOLOGY=${MONGODB_TOPOLOGY:=standalone} mongodb-runner start -t ${MONGODB_TOPOLOGY} --version ${MONGODB_VERSION} -- --port 27017",
+    "test": "TESTING=true tsx node_modules/jasmine/bin/jasmine",
+    "posttest": "mongodb-runner stop --all",
+    "watch": "nodemon index.ts",
+    "build": "tsc",
+    "preview": "npm run build && npm run start"
   },
   "dependencies": {
-    "express": "4.18.1",
-    "parse": "3.4.2",
-    "parse-server": "5.2.1"
+    "express": "5.2.1",
+    "parse": "8.6.2",
+    "parse-server": "9.10.7"
   },
+  "type": "module",
   "devDependencies": {
-    "@babel/eslint-parser": "7.17.0",
-    "eslint": "8.15.0",
-    "jasmine": "4.1.0",
-    "mongodb-runner": "4.9.0",
-    "nodemon": "2.0.16",
-    "nyc": "15.1.0",
-    "prettier": "2.6.2"
+    "@eslint/js": "10.0.1",
+    "@mongodb-js/mongodb-runner": "8.4.3",
+    "@semantic-release/changelog": "6.0.3",
+    "@semantic-release/commit-analyzer": "13.0.1",
+    "@semantic-release/git": "10.0.1",
+    "@semantic-release/github": "12.0.6",
+    "@semantic-release/npm": "13.1.5",
+    "@semantic-release/release-notes-generator": "14.1.1",
+    "@types/jasmine": "6.0.0",
+    "@types/node": "26.1.1",
+    "@types/parse": "6.1.0",
+    "cross-env": "10.1.0",
+    "eslint": "10.7.0",
+    "globals": "17.7.0",
+    "jasmine": "6.3.0",
+    "nodemon": "3.1.14",
+    "nyc": "18.0.0",
+    "prettier": "3.9.6",
+    "semantic-release": "25.0.9",
+    "tsx": "4.23.1",
+    "typescript": "6.0.3",
+    "typescript-eslint": "8.66.0"
   },
   "engines": {
-    "node": ">=12.22.10 <19"
+    "node": ">=18.20.4 <19.0.0 || >=20.18.0 <21.0.0 || >=22.12.0 <23.0.0"
   }
 }
